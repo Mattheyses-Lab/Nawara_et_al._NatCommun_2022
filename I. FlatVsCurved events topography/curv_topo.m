@@ -10,6 +10,9 @@
 %http://creativecommons.org/licenses/by/4.0/ or send a letter to Creative
 %Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
+%last edited 09/14/22 -> supports multiple files in the folder and fixex
+%saving
+
 function curv_topo(yourpath)
 close all
 frame_rate = 0.3;                %frame rate of video
@@ -172,7 +175,7 @@ for iiiii = 3:length(ContentInFold)
             end
             
             
-            for ii = 1:length(dz_poz_xy_startend)
+            for ii = 1:size(dz_poz_xy_startend,1)
                 x = dz_poz_xy_startend(ii,2);
                 y = dz_poz_xy_startend(ii,1);
                 
@@ -185,7 +188,7 @@ for iiiii = 3:length(ContentInFold)
                 
             end
             
-            for ii = 1:length(dz_neg_xy_startend)
+            for ii = 1:size(dz_neg_xy_startend,1)
                 x = dz_neg_xy_startend(ii,2);
                 y = dz_neg_xy_startend(ii,1);
                 for zz = dz_neg_xy_startend(ii,3):1:dz_neg_xy_startend(ii,4)
@@ -196,11 +199,13 @@ for iiiii = 3:length(ContentInFold)
                 end
             end
             
-            name = [yourpath,'/', 'masked_events_timelapse.tif'];
+            name = [SubFold,'/', 'masked_events_timelapse', '_', ContentInSubFold(iiii).name(1:end-11), '.tif'];
             cell_mat2tiff(name, masked_events)
             FigList = findobj(allchild(0), 'flat', 'Type', 'figure');
-            savefig(FigList, [yourpath, '/', 'Curved_Flat_Topography.fig'])
+            savefig(FigList, [SubFold,'/', 'Curved_Flat_Topography', '_', ContentInSubFold(iiii).name(1:end-11), '.fig'])
+            close all
             
+            clear('x', 'y', 'masked_events', 'dz_poz_xy_startend', 'dz_neg_xy_startend',  'data') 
         end
     end
 end
