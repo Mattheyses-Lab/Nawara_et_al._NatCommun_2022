@@ -88,6 +88,8 @@ s(31).name = 'iRFP713'; %Added by Nawara T. (Mattheyses lab, UAB, 09/13/19)
 s(31).lambda_em = 713e-9;
 s(32).name = 'Ratio'; %Added by Nawara T. (Mattheyses lab, UAB, 04/02/19)
 s(32).lambda_em = 512e-9;
+s(32).name = 'dZ'; %Added by Nawara T. (Mattheyses lab, UAB, 07/03/20)
+s(32).lambda_em = 512e-9;
 
 [~,i] = sort([s.lambda_em]);
 s = s(i);
