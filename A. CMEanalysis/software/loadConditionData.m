@@ -205,7 +205,9 @@ for k = 1:nCells
         tmp = dir(channels{c});
         tmp = tmp(cellfun(@(i) ~strcmpi(i(1), '.'), {tmp.name}));
         tmp = {tmp(~[tmp.isdir]).name}';
-        tmp = tmp(~cellfun(@isempty, regexpi(tmp, '\.tif|\.stk')));
+        tmp = tmp(~cellfun(@isempty, regexpi(tmp, '\.tif|\.stk|')));
+        %tmp = tmp(~cellfun(@isempty, regexpi(tmp, '\.tif|\.stk|\.mat')));
+        %%% THIS IS THE ORYGINAL ONE ---> tmp = tmp(~cellfun(@isempty, regexpi(tmp, '\.tif|\.stk')));
         % sort files in case leading zeros are missing
         idx = regexp(tmp','\d+(?=\.)', 'match', 'once');
         if numel(unique(cellfun(@numel, idx)))~=1
@@ -222,7 +224,11 @@ for k = 1:nCells
     if all(~cellfun(@isempty, framePaths))
         if numel(framePaths{1})==1
             data(k).framePaths = cellfun(@(i) i{1}, framePaths, 'unif', 0);
+            %matObj = matfile(data(k).framePaths{1}); %maybe a swap for MAT file read????
+            %aa = matObj.T488_Cor_Blur(1,1); 
             info = imfinfo(data(k).framePaths{1});
+            %data(k).imagesize = [size(aa{1,1},1) size(aa{1,1},2)];
+            %data(k).movieLength = size(matObj.T488_Cor_Blur, 1);
             data(k).imagesize = [info(1).Height info(1).Width];
             data(k).movieLength = numel(info);
         else

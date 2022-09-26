@@ -45,7 +45,7 @@ ip.CaseSensitive = false;
 ip.addRequired('data', @(x) isstruct(x) & numel(x)==1);
 ip.addParamValue('Mask', true, @islogical);
 ip.addParamValue('FileName', [], @(x) isempty(x) || ischar(x));
-ip.addParamValue('Cutoff_f', 5, @isscalar);
+ip.addParamValue('Cutoff_f', 15, @isscalar);
 ip.addParamValue('Sort', true, @islogical);
 ip.addParamValue('Category', 'Ia');
 ip.addParamValue('SignificantSlaveIndex', []);

@@ -84,16 +84,16 @@ ip.addOptional('data', [], @isstruct);
 ip.addParameter('Overwrite', false, @islogical);
 ip.addParameter('GaussianPSF', 'data', @(x) any(strcmpi(x, {'data', 'model'})));
 ip.addParameter('Sigma', []);
-ip.addParameter('TrackingRadius', [3 6], @(x) numel(x)==2);
-ip.addParameter('TrackingGapLength', 2, @(x) numel(x)==1);
+ip.addParameter('TrackingRadius', [1 3], @(x) numel(x)==2);
+ip.addParameter('TrackingGapLength', 13, @(x) numel(x)==1);
 ip.addParameter('Parameters', [], @(x) numel(x)==3);
 ip.addParameter('ControlData', [], @isstruct);
-ip.addParameter('PlotAll', false, @islogical); %false
+ip.addParameter('PlotAll', true, @islogical);
 ip.addParameter('SlaveAmplitudeRatio', 0, @isnumeric);
 ip.addParameter('ChannelNames', []);
 ip.addParameter('FirstNFrames', [], @isposint);
 ip.addParameter('MaxIntensityThreshold', [], @isscalar);
-ip.addParameter('CompareHighLowSNR', false, @islogical);  %false
+ip.addParameter('CompareHighLowSNR', false, @islogical);
 ip.addParameter('DisplayMode', 'screen', @(x) any(strcmpi(x, {'print', 'screen'})));
 ip.parse(varargin{:});
 data = ip.Results.data;
@@ -122,7 +122,7 @@ getCellMask(data, 'Overwrite', overwrite(1), 'Validate', true);
 
 runDetection(data, 'SigmaSource', ip.Results.GaussianPSF,...
     'Sigma', ip.Results.Sigma, 'Overwrite', overwrite(2));
-[psnr, cmap] = plotPSNRDistribution(data, 'Pool', true); %org flase
+[psnr, cmap] = plotPSNRDistribution(data, 'Pool', false);
 
 %-------------------------------------------------------------------------------
 % 2) Tracking & track processing
@@ -130,8 +130,7 @@ runDetection(data, 'SigmaSource', ip.Results.GaussianPSF,...
 settings = loadTrackSettings('Radius', ip.Results.TrackingRadius, 'MaxGapLength', ip.Results.TrackingGapLength);
 runTracking(data, settings, 'Overwrite', overwrite(3));
 
-runTrackProcessing(data, 'Overwrite', overwrite(4),'SlaveAmplitudeRatio',ip.Results.SlaveAmplitudeRatio,...
-    'Buffer', [10 10], 'Cutoff_f', 11);
+runTrackProcessing(data, 'Overwrite',overwrite(4), 'Buffer', [15 15], 'SlaveAmplitudeRatio',ip.Results.SlaveAmplitudeRatio, 'Cutoff_f', 16);
 
 %-------------------------------------------------------------------------------
 % 3) Analysis
@@ -178,6 +177,7 @@ end
     
 
 res.cohorts = plotIntensityCohorts(data, 'MaxIntensityThreshold', res.lftRes.MaxIntensityThreshold,...
-    'ShowBackground', false, 'CohortBounds_s', [10 20 40 60 80 100 120], 'DisplayMode', 'screen',... %%%'CohortBounds_s', [10 20 40 60 80 100 120]
-    'ScaleSlaveChannel', false,'ShowPct', false, 'SlaveName', chNames(2:end), 'Align', 'right'); % oryginal 'ScaleSlaveChannel', false
+    'ShowBackground', false, 'DisplayMode', 'screen', 'ScaleSlaveChannel', false,...
+    'CohortBounds_s', [10 20 40 60 80 100], 'Align', 'left', 'ShowPct', false, 'SlaveName', chNames(2:end));
 
+system("echo ""Subject: CMEanalysis is done"" | sendmail -v tnawara@uab.edu");

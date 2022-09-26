@@ -36,26 +36,26 @@ function [lftRes, res] = runLifetimeAnalysis(data, varargin)
 ip = inputParser;
 ip.CaseSensitive = false;
 ip.addRequired('data', @(x) isstruct(x) && numel(unique([data.framerate]))==1);
-ip.addOptional('CohortBounds', [5 10 15 20 40 60 120]); % pairs: (5 10], (10 15],...
+ip.addOptional('CohortBounds', [5 10 15 20 40 60 120]); % pairs: (5 10], (10 15],...[5 10 15 20 40 60 120]
 ip.addParameter('Display', 'on', @(x) any(strcmpi(x, {'on', 'off', 'all'})));
 ip.addParameter('DisplayMode', 'screen', @(x) any(strcmpi(x, {'print', 'screen'})));
 ip.addParameter('ProcessedTracks', 'ProcessedTracks.mat', @ischar);
 ip.addParameter('LifetimeData', 'lifetimeData.mat', @ischar);
 ip.addParameter('Type', 'all', @ischar);
-ip.addParameter('Cutoff_f', 11, @isscalar); %oryginal 5
+ip.addParameter('Cutoff_f', 15, @isscalar);
 ip.addParameter('Print', false, @islogical);
-ip.addParameter('Buffer', 10); %orygial 5
+ip.addParameter('Buffer', 15);
 ip.addParameter('MaxIntensityThreshold', []);
 ip.addParameter('Overwrite', false, @islogical);
 ip.addParameter('ClassificationSelector', 'significantMaster');
-ip.addParameter('ShowThresholdRange', true, @islogical); %org false
+ip.addParameter('ShowThresholdRange', false, @islogical);
 ip.addParameter('MaxP', 3);
 ip.addParameter('YLim', []);
-ip.addParameter('Rescale', false, @islogical); % oryginal true
+ip.addParameter('Rescale', true, @islogical);
 ip.addParameter('RemoveOutliers', true, @islogical);
 ip.addParameter('ExcludeVisitors', true, @islogical);
 ip.addParameter('FirstNFrames', []);
-ip.addParameter('PoolDatasets', true, @islogical); %org false
+ip.addParameter('PoolDatasets', false, @islogical);
 ip.addParameter('ShowStatistics', false, @islogical);
 ip.addParameter('SelectIndex', [], @iscell);
 ip.addParameter('SlaveNames', []);
@@ -90,7 +90,7 @@ Nmax = max([data.movieLength])-2*buffer;
 % movieLength = min([data.movieLength]);
 framerate = data(1).framerate;
 
-firstN = 10:40;
+firstN = 10:65;
 
 % loop through data sets, load tracks, store max. intensities and lifetimes
 res = struct([]);
@@ -227,7 +227,7 @@ else
     end
     
     if isempty(FirstNFrames)
-        frameRange = 10:40; %oryginal:3:12 Nawara T. 04.22.20
+        frameRange = 20:80;
         hval = zeros(1,frameRange(end));
         for ni = 1:numel(frameRange)
             M = max(A(:,1:frameRange(ni)),[],2);
@@ -418,20 +418,20 @@ fprintf(['  CSs:  [' strjoin(arrayfun(@(i) num2str(i, '%.1f'), lftPctCS, 'unif',
 fprintf(['  CCPs: [' strjoin(arrayfun(@(i) num2str(i, '%.1f'), lftPctCCP, 'unif', 0), ', ') '] s\n']);
 
 % print lifetime distribution percentiles
-if isfield(res, 'significantMaster')
-    
-    for s=1:size(lftRes.slaveCombs,1)
-        lftCDF = cumsum(mean(lftRes.lftHistSlaveCS{s},1));
-        [~,uidx] = unique(lftCDF);
-        lftPctCS = interp1(lftCDF(uidx), lftRes.t(uidx), [0.05 0.25 0.5 0.75 0.95]);
-        lftCDF = cumsum(mean(lftRes.lftHistSlaveCCP{s},1));
-        [~,uidx] = unique(lftCDF);
-        lftPctCCP = interp1(lftCDF(uidx), lftRes.t(uidx), [0.05 0.25 0.5 0.75 0.95]);
-        fprintf(['Lifetime distribution percentiles for slave ' num2str(s) ' positive population (5th, 25th, 50th, 75th, 95th):\n']);
-        fprintf(['  CSs:  [' strjoin(arrayfun(@(i) num2str(i, '%.1f'), lftPctCS, 'unif', 0), ', ') '] s\n']);
-        fprintf(['  CCPs: [' strjoin(arrayfun(@(i) num2str(i, '%.1f'), lftPctCCP, 'unif', 0), ', ') '] s\n']);
-    end
-end
+% if isfield(res, 'significantMaster')
+%     
+%     for s=1:size(lftRes.slaveCombs,1)
+%         lftCDF = cumsum(mean(lftRes.lftHistSlaveCS{s},1));
+%         [~,uidx] = unique(lftCDF);
+%         lftPctCS = interp1(lftCDF(uidx), lftRes.t(uidx), [0.05 0.25 0.5 0.75 0.95]);
+%         lftCDF = cumsum(mean(lftRes.lftHistSlaveCCP{s},1));
+%         [~,uidx] = unique(lftCDF);
+%         lftPctCCP = interp1(lftCDF(uidx), lftRes.t(uidx), [0.05 0.25 0.5 0.75 0.95]);
+%         fprintf(['Lifetime distribution percentiles for slave ' num2str(s) ' positive population (5th, 25th, 50th, 75th, 95th):\n']);
+%         fprintf(['  CSs:  [' strjoin(arrayfun(@(i) num2str(i, '%.1f'), lftPctCS, 'unif', 0), ', ') '] s\n']);
+%         fprintf(['  CCPs: [' strjoin(arrayfun(@(i) num2str(i, '%.1f'), lftPctCCP, 'unif', 0), ', ') '] s\n']);
+%     end
+% end
 
 %====================
 % Initiation density

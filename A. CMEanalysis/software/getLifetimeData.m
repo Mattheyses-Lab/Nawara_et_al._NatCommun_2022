@@ -58,7 +58,7 @@ parfor i = 1:nd
     fpath = [data(i).source 'Analysis' filesep ip.Results.LifetimeData]; %#ok<PFBNS>
     if ~(exist(fpath, 'file')==2) || ip.Results.Overwrite
         
-        tracks = loadTracks(data(i), 'Mask', ip.Results.Mask, 'Category', 'all', 'Cutoff_f', ip.Results.Cutoff_f,...
+        tracks = loadTracks(data(i), 'Mask', ip.Results.Mask, 'Category', 'all', 'Cutoff_f', 16,...
             'AnalysisPath', ip.Results.AnalysisPath, 'FileName', ip.Results.ProcessedTracks);
         
         % concatenate amplitudes of master channel into matrix

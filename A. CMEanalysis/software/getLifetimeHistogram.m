@@ -3,8 +3,8 @@ function lftHist = getLifetimeHistogram(data, tracks, varargin)
 ip = inputParser;
 ip.CaseSensitive = false;
 ip.addOptional('Nmax', data.movieLength-2);
-ip.addParamValue('Cutoff_f', 4, @isscalar);
-ip.addParamValue('Buffer', 5);
+ip.addParamValue('Cutoff_f', 14, @isscalar);
+ip.addParamValue('Buffer', 15);
 ip.parse(varargin{:});
 Nmax = ip.Results.Nmax;
 buffer = ip.Results.Buffer;

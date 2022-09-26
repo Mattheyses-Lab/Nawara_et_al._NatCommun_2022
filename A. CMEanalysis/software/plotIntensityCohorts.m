@@ -43,9 +43,9 @@ ip.addParamValue('ShowVariation', true, @islogical);
 ip.addParamValue('FillMode', 'SEM', @(x) any(strcmpi(x, {'SEM', 'pct'})));
 ip.addParamValue('FrontLayer', false, @islogical);
 ip.addParamValue('ShowBackground', false, @islogical);
-ip.addParamValue('Rescale', false, @islogical); %org true
+ip.addParamValue('Rescale', true, @islogical);
 ip.addParamValue('RescalingReference', 'med', @(x) any(strcmpi(x, {'max', 'med'})));
-ip.addParamValue('ScaleSlaveChannel', false, @islogical); %org true
+ip.addParamValue('ScaleSlaveChannel', true, @islogical);
 ip.addParamValue('ScalingFactor', [], @(x) numel(x)==nCh);
 ip.addParamValue('MaxIntensityThreshold', 0);
 ip.addParamValue('ExcludeVisitors', true, @islogical);
@@ -56,9 +56,9 @@ ip.addParamValue('Hues', []);
 ip.addParamValue('Colormap', []);
 ip.addParamValue('ColormapFill', []);
 ip.addParamValue('DisplayMode', 'screen');
-ip.addParamValue('DisplayAll', false);
+ip.addParamValue('DisplayAll', true);
 ip.addParamValue('TrackIndex', []);
-ip.addParamValue('Cutoff_f', 5);
+ip.addParamValue('Cutoff_f', 15);
 ip.addParamValue('Alpha', 0.05);
 ip.addParamValue('YTick', []);
 ip.addParamValue('YLim', []);
@@ -70,7 +70,7 @@ ip.addParamValue('ShowStats', true, @islogical);
 ip.addParamValue('AvgFun', @nanmean, @(x) isa(x, 'function_handle'));
 ip.addParamValue('LftDataName', 'lifetimeData.mat');
 ip.addParamValue('AmplitudeCorrection', []);
-ip.addParamValue('Align', 'left', @(x) any(strcmpi(x, {'right', 'left'})));
+ip.addParamValue('Align', 'right', @(x) any(strcmpi(x, {'right', 'left'})));
 % ip.addParamValue('MinTracksPerCohort', 5);
 ip.parse(data, varargin{:});
 cohortBounds = ip.Results.CohortBounds_s;
@@ -309,12 +309,12 @@ if ~isempty(sigCombIdx)
     switch nCh
         case 2
             for a = 1:na
-                atext{a} = [tmp(a,1) SlaveName{1} ': ' num2str(meanPct(a)*100, '%.1f') '±' num2str(stdPct(a)*100, '%.1f') '%'];
+                atext{a} = [tmp(a,1) SlaveName{1} ': ' num2str(meanPct(a)*100, '%.1f') '�' num2str(stdPct(a)*100, '%.1f') '%'];
             end
         case 3
             for a = 1:na
                 atext{a} = [SlaveName{1} tmp(a,1) ' / ' SlaveName{2} tmp(a,2) ': '...
-                    num2str(meanPct(a)*100, '%.1f') '±' num2str(stdPct(a)*100, '%.1f') '%'];
+                    num2str(meanPct(a)*100, '%.1f') '�' num2str(stdPct(a)*100, '%.1f') '%'];
             end
     end
 end
@@ -496,6 +496,9 @@ if ip.Results.ShowStats
             %if sum(ntCoSel{c}>0)/numel(ntCoSel{c}) > 0.5
                 text(XTick(c), YLim(end), num2str(sum(ntCoSel(:,c))), 'Parent',  ha(a), fset.sfont{:},...
                    'HorizontalAlignment', 'center', 'VerticalAlignment', 'top');
+               if c == 1 || c == 2
+                   ntCoSel
+               end
             %end
         end
         

@@ -47,8 +47,8 @@ function runTrackProcessing(data, varargin)
 ip = inputParser;
 ip.CaseSensitive = false;
 ip.addRequired('data', @isstruct);
-ip.addParamValue('Buffer', [10 10], @(x) numel(x)==2);
-ip.addParamValue('BufferAll',false, @islogical); %oryginal false
+ip.addParamValue('Buffer', [15 15], @(x) numel(x)==2);
+ip.addParamValue('BufferAll', false, @islogical);
 ip.addParamValue('Overwrite', false, @islogical);
 ip.addParamValue('TrackerOutput', 'trackedFeatures.mat', @ischar);
 ip.addParamValue('FileName', 'ProcessedTracks.mat', @ischar);
@@ -58,7 +58,7 @@ ip.addParamValue('Preprocess', true, @islogical);
 ip.addParamValue('SlaveAmplitudeRatio', 0, @isnumeric);
 ip.addParamValue('Postprocess', true, @islogical);
 ip.addParamValue('CohortBounds_s', [10 20 40 60 80 100 125 150]); % used in post-proc
-ip.addParamValue('Cutoff_f', 11, @isscalar);
+ip.addParamValue('Cutoff_f', 15, @isscalar);
 ip.addParamValue('ForceDiffractionLimited', false, @islogical);
 ip.parse(data, varargin{:});
 overwrite = ip.Results.Overwrite;
@@ -296,7 +296,7 @@ for k = 1:nTracks
         % -the segment is splitting and merging from/to the same parent
         % -short segment merges, segment starts after track start
         % -short segment splits, segment ends before track end
-        msIdx(s) = segLengths(s)==1 || (segLengths(s)<10 && ( diff(ievents(:,4))==0 ||...
+        msIdx(s) = segLengths(s)==1 || (segLengths(s)<4 && ( diff(ievents(:,4))==0 ||...
             (isnan(ievents(1,4)) && ~isnan(ievents(2,4)) && ievents(1,1)>seqOfEvents(1,1)) ||...
             (isnan(ievents(2,4)) && ~isnan(ievents(1,4)) && ievents(2,1)<seqOfEvents(end,1)) ));
     end
@@ -492,7 +492,7 @@ for f = 1:data.movieLength
         if iscell(data.framePaths{mCh})
             frame = double(imread(data.framePaths{ch}{f}));
         else
-            frame = double(readtiff(data.framePaths{ch}, f));
+            frame = readtiff(data.framePaths{ch}, f);
         end
         
         %------------------------
@@ -728,7 +728,7 @@ if postprocess
         
         % new segments must be at least 5 frames
         delta = diff([1 gapIdx trackLengths(k)]);
-        gapIdx(delta(1:end-1)<10 | delta(2:end)<10) = []; %oryginal apIdx(delta(1:end-1)<5 | delta(2:end)<5)
+        gapIdx(delta(1:end-1)<15 | delta(2:end)<15) = [];
         
         ng = numel(gapIdx);
         splitIdx = zeros(1,ng);
@@ -801,7 +801,7 @@ if postprocess
         medianDist(i) = nanmedian(dists{i});
     end
     for i = 1:nt
-        if sum(dists{i}>prctile(medianDist, 95))>4 && tracks(i).catIdx==1
+        if sum(dists{i}>prctile(medianDist, 95))>2 && tracks(i).catIdx==1 %Chaged to from 4 to 2
             tracks(i).catIdx = 2;
         end
     end

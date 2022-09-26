@@ -72,7 +72,7 @@ fileName = [fileName '.mat'];
 % Load tracker settings
 settings = ip.Results.settings;
 if isempty(settings)
-   settings = loadTrackSettings('Radius', [1 3], 'MaxGapLength', 2); %org [3 6] and 2
+   settings = loadTrackSettings('Radius', [3 6], 'MaxGapLength', 2);
 end
 
 % Run tracker on each data set

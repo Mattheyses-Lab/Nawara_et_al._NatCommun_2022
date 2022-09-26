@@ -36,7 +36,7 @@ function [mu, sigma, xi, g] = fitGaussianModeToPDF(samples, varargin)
 ip = inputParser;
 ip.CaseSensitive = false;
 ip.addParamValue('Display', false, @islogical);
-ip.addParamValue('FixMode', false, @islogical); 
+ip.addParamValue('FixMode', false, @islogical);
 ip.parse(varargin{:});
 
 opts = optimset('Jacobian', 'off', ...

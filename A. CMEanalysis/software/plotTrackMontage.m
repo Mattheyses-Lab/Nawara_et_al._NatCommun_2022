@@ -27,7 +27,7 @@
 % 
 % 
 
-% François Aguet (last modified 02/07/2012)
+% Franï¿½ois Aguet (last modified 02/07/2012)
 
 function plotTrackMontage(track, trackStack, varargin)
 
@@ -168,7 +168,7 @@ ha = zeros(nc,nf);
 set(hf, 'Position', [50, 100, width+offset, height], 'Visible', ip.Results.Visible);%, 'ResizeFcn', {@resizeCallback});
 
 % stack index si: x + (rowi-1)*nc*nx + (c-1)*nx
-for si = 1:nf
+for si = 1:2:nf
     x = rem(si-1,nx)+1;
     rowi = ceil(si/nx); % each row contains all channels
     

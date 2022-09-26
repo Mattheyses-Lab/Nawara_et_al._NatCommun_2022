@@ -87,12 +87,12 @@ if isstruct(lftRes)
             hp(1) = plot(lftRes.t, mean(lftRes.pctCCP)*lftRes.meanLftHistCCP, '-', 'Color', ce(3,:), 'LineWidth', lw+0.5);
             
             % Legend:
-            ltext = {[' CCPs: ' num2str(mean(lftRes.pctCCP)*100, '%.1f') ' ± ' num2str(std(lftRes.pctCCP)*100, '%.1f') ' %'],...
-                [' CSs: ' num2str(mean(lftRes.pctCS)*100, '%.1f') ' ± ' num2str(std(lftRes.pctCS)*100, '%.1f') ' %'],...
+            ltext = {[' CCPs: ' num2str(mean(lftRes.pctCCP)*100, '%.1f') ' � ' num2str(std(lftRes.pctCCP)*100, '%.1f') ' %'],...
+                [' CSs: ' num2str(mean(lftRes.pctCS)*100, '%.1f') ' � ' num2str(std(lftRes.pctCS)*100, '%.1f') ' %'],...
                 ' All structures'};
             lheight = 1.25;
             if isfield(lftRes, 'meanLftHistVisit')
-                ltext = [ltext(1:2) [' Visitors: ' num2str(mean(lftRes.pctVisit)*100, '%.1f') ' ± ' num2str(std(lftRes.pctVisit)*100, '%.1f') ' %'] ltext(3)];
+                ltext = [ltext(1:2) [' Visitors: ' num2str(mean(lftRes.pctVisit)*100, '%.1f') ' � ' num2str(std(lftRes.pctVisit)*100, '%.1f') ' %'] ltext(3)];
                 hp = hp([1 2 4 3]);
                 lheight = 1.5;
             end
@@ -155,7 +155,7 @@ if isstruct(lftRes)
                 labelsA{s} = [labelsA{s} '/' tmp(s,c) ' ' chNames{c}];
                 labelsB{s} = [labelsB{s} '/' tmp(s,c) ' ' chNames{c}];
             end
-            labelsC{s} = [labelsA{s} ' (' num2str(pctCCP(s)/sum(pctCCP)*100, '%.1f') '±' num2str(pctCCPStd(s)/sum(pctCCP)*100, '%.1f') '%)'];
+            labelsC{s} = [labelsA{s} ' (' num2str(pctCCP(s)/sum(pctCCP)*100, '%.1f') '�' num2str(pctCCPStd(s)/sum(pctCCP)*100, '%.1f') '%)'];
             labelsA{s} = [labelsA{s} ' CCPs (' num2str(pctCCP(s)*100, '%.1f') '%)'];
             labelsB{s} = [labelsB{s} ' CSs (' num2str(pctCS(s)*100, '%.1f') '%)'];
         end
@@ -257,8 +257,8 @@ elseif iscell(lftRes)
         hp(2*(i-1)+2) = plot(lftRes{i}.t, lftRes{i}.meanLftHist_B, '.-', 'Color', colorB(i,:), 'LineWidth', 2, 'MarkerSize', 16);
         hp(2*(i-1)+1) = plot(lftRes{i}.t, lftRes{i}.meanLftHist_A, '.-', 'Color', colorA(i,:), 'LineWidth', 2, 'MarkerSize', 16);
         expName = getDirFromPath(getExpDir(lftRes{i}.data));
-        legendText{2*(i-1)+1} = [expName ', above threshold (' num2str(mean(lftRes{i}.pctAbove)*100,'%.1f') ' ± ' num2str(std(lftRes{i}.pctAbove)*100,'%.1f') ' %)'];
-        legendText{2*(i-1)+2} = [expName ', below threshold (' num2str(mean(1-lftRes{i}.pctAbove)*100,'%.1f') ' ± ' num2str(std(lftRes{i}.pctAbove)*100,'%.1f') ' %)'];
+        legendText{2*(i-1)+1} = [expName ', above threshold (' num2str(mean(lftRes{i}.pctAbove)*100,'%.1f') ' � ' num2str(std(lftRes{i}.pctAbove)*100,'%.1f') ' %)'];
+        legendText{2*(i-1)+2} = [expName ', below threshold (' num2str(mean(1-lftRes{i}.pctAbove)*100,'%.1f') ' � ' num2str(std(lftRes{i}.pctAbove)*100,'%.1f') ' %)'];
     end
     axis([0 min(ip.Results.XTick(end), lftRes{1}.t(end)) 0 ya(end)]);
     xlabel('Lifetime (s)', fset.lfont{:});

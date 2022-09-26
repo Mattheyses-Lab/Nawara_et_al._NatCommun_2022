@@ -73,7 +73,8 @@ if isempty(sigma) && (~all(hasDet) || overwrite)
                     if iscell(data(i).framePaths{c})
                         frames(i,:) = arrayfun(@(f) double(imread(data(i).framePaths{c}{f})), fidx, 'unif', 0);
                     else
-                        frames(i,:) = arrayfun(@(f) double(readtiff(data(i).framePaths{c}, f)), fidx', 'unif', 0); 
+                        frames(i,:) = arrayfun(@(f) double(readtiff(data(i).framePaths{c}, f)), fidx', 'unif', 0);
+                        %frames(i,:) = arrayfun(@(f) double(readMATfile(data(i).framePaths{c}, f)), fidx', 'unif', 0); 
                     end
                 end
                 sigma(c) = getGaussianPSFsigmaFromData(vertcat(frames(:)), 'Display', true);
@@ -134,6 +135,7 @@ mask = false([data.imagesize data.movieLength]);
 parfor k = 1:data.movieLength
     if ~iscell(data.framePaths{mCh}) %#ok<PFBNS>
         img = double(readtiff(data.framePaths{mCh}, k));
+        %img = readMATfile(data.framePaths{mCh}, k);
     else
         img = double(imread(data.framePaths{mCh}{k}));
     end
